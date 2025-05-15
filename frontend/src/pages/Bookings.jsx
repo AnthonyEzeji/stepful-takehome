@@ -14,7 +14,7 @@ function Bookings() {
     const user = JSON.parse(localStorage.getItem('user'))
     useEffect(() => {
         async function fetchBookings() {
-            await axios.get(`http://localhost:5010/booking/${user.userId}`)
+            await axios.get(`https://stepful-takehome-backend.vercel.app/booking/${user.userId}`)
                 .then(res => {
                     console.log(res.data)
                     const formattedBookings = res.data.map(booking => ({
@@ -29,7 +29,7 @@ function Bookings() {
         }
         async function fetchFeedback() {
             if(user.role==="coach"){
-                await axios.get(`http://localhost:5010/feedback/${user.userId}`).then(res => {
+                await axios.get(`https://stepful-takehome-backend.vercel.app/feedback/${user.userId}`).then(res => {
                     setFeedbackList(res.data);
                 });
             }
@@ -48,7 +48,7 @@ function Bookings() {
         const bookingId = e.target.id
         const booking = upcomingBookings.find(booking=>booking._id ===bookingId)
 
-        await axios.delete(`http://localhost:5010/booking/${booking.slotId}`,{data:{coachId:booking.coachId,studentId:booking.studentId}}).then(res=>{
+        await axios.delete(`https://stepful-takehome-backend.vercel.app/booking/${booking.slotId}`,{data:{coachId:booking.coachId,studentId:booking.studentId}}).then(res=>{
             alert('Booking deleted')
             window.location.reload()
         })

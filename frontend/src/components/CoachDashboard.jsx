@@ -13,7 +13,7 @@ function CoachDashboard() {
 
     useEffect(() => {
         async function fetchSlots() {
-            await axios.get(`http://localhost:5010/slot/${coach.userId}`)
+            await axios.get(`https://stepful-takehome-backend.vercel.app/slot/${coach.userId}`)
                 .then(res => {
                     const now = new Date();
 
@@ -31,7 +31,7 @@ function CoachDashboard() {
         }
 
         async function fetchBookings() {
-            await axios.get(`http://localhost:5010/booking/${coach.userId}`)
+            await axios.get(`https://stepful-takehome-backend.vercel.app/booking/${coach.userId}`)
                 .then(res => {
                     const formattedBookings = res.data.map(booking => ({
                         ...booking,

@@ -8,7 +8,7 @@ function CreateSlot() {
   var navigate = useNavigate()
     async function handleSlots(slots) {
         
-        await axios.post(`http://localhost:5010/slot/${JSON.parse(localStorage.getItem('user')).userId}`, { slots })
+        await axios.post(`https://stepful-takehome-backend.vercel.app/slot/${JSON.parse(localStorage.getItem('user')).userId}`, { slots })
             .then(response => {
                 if (response.data.message) {
                     alert(response.data.message);

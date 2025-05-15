@@ -12,13 +12,13 @@ function Feedback() {
 
     useEffect(() => {
         async function fetchFeedback() {
-            await axios.get(`http://localhost:5010/feedback/${coach.userId}`).then(res => {
+            await axios.get(`https://stepful-takehome-backend.vercel.app/feedback/${coach.userId}`).then(res => {
                 setFeedbackList(res.data);
             });
         }
 
         async function fetchBookings() {
-            await axios.get(`http://localhost:5010/booking/${coach.userId}`).then(res => {
+            await axios.get(`https://stepful-takehome-backend.vercel.app/booking/${coach.userId}`).then(res => {
                 setBookings(res.data);
             });
         }
@@ -29,7 +29,7 @@ function Feedback() {
 
     async function handleFeedbackDelete(e) {
         const feedbackId = e.target.id;
-        await axios.delete(`http://localhost:5010/feedback/${feedbackId}`).then(res => {
+        await axios.delete(`https://stepful-takehome-backend.vercel.app/feedback/${feedbackId}`).then(res => {
             console.log(res.data);
             setFeedbackList(prevFeedback => prevFeedback.filter(feedback => feedback._id !== feedbackId));
         });

@@ -27,7 +27,7 @@ function RegisterPage() {
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:5010/user/register", formData).then(response => {
+            await axios.post("https://stepful-takehome-backend.vercel.app/user/register", formData).then(response => {
                 if (response.data.error) {
                     alert(response.data.error);
                 } else {

@@ -10,7 +10,7 @@ function LoginPage() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        await axios.post("http://localhost:5010/user/login", { email, password }).then(response => {
+        await axios.post("https://stepful-takehome-backend.vercel.app/user/login", { email, password }).then(response => {
             if (response.data.token) {
                 let token = response.data.token;
                 const user = jwtDecode(token);

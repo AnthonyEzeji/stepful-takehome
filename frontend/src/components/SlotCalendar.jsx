@@ -19,7 +19,7 @@ export default function SlotCalendar({ handleSlots }) {
             navigate('/dashboard')
         }
         async function fetchSlots() {
-            await axios.get(`http://localhost:5010/slot/${user.userId}`)
+            await axios.get(`https://stepful-takehome-backend.vercel.app/slot/${user.userId}`)
                 .then(response => setSlots(response.data))
                 .catch(error => console.error("Error fetching slots:", error));
         }
