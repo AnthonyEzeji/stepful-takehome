@@ -12,10 +12,12 @@ import CreateSlot from './pages/CreateSlot'
 import Bookings from './pages/Bookings'
 import Feedback from './pages/Feedback'
 import Navbar from './components/Navbar'
+import LandingPage from './pages/LandingPage'
 function App() {
   return (
     <div>
       <Routes>
+      <Route path={'/'} element={<LandingPage/>}></Route>
       <Route path={'/login'} element={<LoginPage/>}></Route>
       <Route path={'/register'} element={<RegisterPage/>}></Route>
       <Route path={'/dashboard'} element={<DashboardPage/>}></Route>
