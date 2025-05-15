@@ -61,6 +61,11 @@ export default function SlotCalendar({ handleSlots }) {
         if (selectedPeriod === "AM" && hour === 12) hour = 0;
     
         const startTime = new Date(selectedDate);
+        const now = new Date();
+        if (startTime < now) {
+            alert("Invalid slot: The selected time is in the past!");
+            return;
+        }
         startTime.setHours(hour);
         startTime.setMinutes(parseInt(selectedMinute));
     
@@ -71,6 +76,7 @@ export default function SlotCalendar({ handleSlots }) {
             endTime.setDate(startTime.getDate() + 1);
         }
         const formatDateISO = (date) => date.toISOString(); 
+
 
         const conflictingServerSlot = slots.find(slot => {
             const existingStart = formatDateISO(new Date(slot.startTime));
@@ -104,7 +110,6 @@ export default function SlotCalendar({ handleSlots }) {
         
     
         if (conflictingServerSlot) {
-            console.log(conflictingServerSlot)
             alert(`Invalid slot: It conflicts with an existing slot on ${new Date(conflictingServerSlot.startTime).toDateString()} from ${new Date(conflictingServerSlot.startTime).toLocaleTimeString()} to ${new Date(conflictingServerSlot.endTime).toLocaleTimeString()}`);
             return;
         }
@@ -113,6 +118,7 @@ export default function SlotCalendar({ handleSlots }) {
             alert(`Invalid slot: It conflicts with a newly added slot on ${new Date(conflictingNewSlot.startTime).toDateString()} from ${conflictingNewSlot.startTime.toLocaleTimeString()} to ${conflictingNewSlot.endTime.toLocaleTimeString()}`);
             return;
         }
+        
     
         setNewSlots([...newSlots, { 
             date: startTime.toDateString(), 
