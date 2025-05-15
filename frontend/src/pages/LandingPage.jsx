@@ -21,10 +21,10 @@ function LandingPage() {
 
 
         <div className="flex space-x-4">
-          <Link to="/login" className="px-6 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition">
+          <Link to="/login" className="px-6 py-2  rounded-md shadow hover:bg-blue-700 transition">
             Login
           </Link>
-          <Link to="/register" className="px-6 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 transition">
+          <Link to="/register" className="px-6 py-2  rounded-md shadow hover:bg-green-700 transition">
             Register
           </Link>
         </div>
