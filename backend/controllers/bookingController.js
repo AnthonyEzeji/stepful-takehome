@@ -3,6 +3,7 @@ const slotModel = require('../models/Slot');
 const userModel  = require('../models/User')
 async function createBooking(studentId, coachId, slotId) {
     try {
+       
         const coach = await userModel.findById(coachId)
         const student = await userModel.findById(studentId)
         if(!coach){
@@ -24,11 +25,11 @@ async function createBooking(studentId, coachId, slotId) {
         const studentConflictingBooking = await bookingModel.findOne({
             studentId,
             $or: [
-                { startTime: { $lt: slot.endTime, $gt: slot.startTime } },
-                { endTime: { $gt: slot.startTime, $lt: slot.endTime } }
+                { startTime: { $lt: slot.endTime, $gte: slot.startTime } },
+                { endTime: { $gt: slot.startTime, $lte: slot.endTime } }
             ]
         });
-
+  
         if (studentConflictingBooking) {
             throw new Error("Student already has a booking that overlaps with this time slot.");
         }

@@ -48,11 +48,14 @@ function StudentDashboard() {
         let coachId = slot.coachId;
         await axios.post(`https://stepful-takehome-backend.vercel.app/booking/${user.userId}`, { slotId, coachId })
             .then(res => {
-                if(res.data.error){
+                if(!res.data.error){
+                    alert("Slot booked")
+                    window.location.reload()
+                }else{
                     alert(res.data.error)
                 }
-                alert("Slot booked")
-                window.location.reload()
+                
+               
             });
     }
 
