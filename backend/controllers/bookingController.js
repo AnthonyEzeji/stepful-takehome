@@ -21,13 +21,16 @@ async function createBooking(studentId, coachId, slotId) {
         }
 
       
-        const conflictingBooking = await bookingModel.findOne({
+        const studentConflictingBooking = await bookingModel.findOne({
             studentId,
-            slotId: { $in: await getConflictingSlots(slotId) }
+            $or: [
+                { startTime: { $lt: slot.endTime, $gt: slot.startTime } },
+                { endTime: { $gt: slot.startTime, $lt: slot.endTime } }
+            ]
         });
 
-        if (conflictingBooking) {
-            throw new Error("Student has an existing booking that overlaps with this slot.");
+        if (studentConflictingBooking) {
+            throw new Error("Student already has a booking that overlaps with this time slot.");
         }
 
 
@@ -85,17 +88,6 @@ async function getBookings(id){
 }
 
 
-async function getConflictingSlots(slotId) {
-    const slot = await slotModel.findById(slotId);
-    if (!slot) return [];
 
-    const slotStartTime = new Date(slot.dateTime);
-    const slotEndTime = new Date(slotStartTime.getTime() + 2 * 60 * 60 * 1000); 
-
-    return slotModel.find({
-        dateTime: { $lt: slotEndTime, $gte: slotStartTime },
-        isBooked: true
-    }).distinct("_id"); 
-}
 
 module.exports = {createBooking,deleteBooking,getBookings}
