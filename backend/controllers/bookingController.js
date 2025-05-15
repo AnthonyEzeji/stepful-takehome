@@ -1,0 +1,101 @@
+const bookingModel = require('../models/Booking');
+const slotModel = require('../models/Slot');
+const userModel  = require('../models/User')
+async function createBooking(studentId, coachId, slotId) {
+    try {
+        const coach = await userModel.findById(coachId)
+        const student = await userModel.findById(studentId)
+        if(!coach){
+            throw new Error("Coach not found")
+        }
+        if(!student){
+            throw new Error("Student not found")
+        }
+   
+        const slot = await slotModel.findOne({ _id: slotId, coachId });
+        if (!slot) {
+            throw new Error("Slot does not exist.");
+        }
+        if (slot.isBooked) {
+            throw new Error("Slot is already booked.");
+        }
+
+      
+        const conflictingBooking = await bookingModel.findOne({
+            studentId,
+            slotId: { $in: await getConflictingSlots(slotId) }
+        });
+
+        if (conflictingBooking) {
+            throw new Error("Student has an existing booking that overlaps with this slot.");
+        }
+
+
+        const newBooking = new bookingModel({ studentFirstName:student.firstName,studentLastName:student.lastName,coachFirstName:coach.firstName,coachLastName:coach.lastName,coachPhone:coach.phone,studentPhone:student.phone, studentId, coachId, startTime:slot.startTime,endTime:slot.endTime, slotId });
+        await newBooking.save();
+   
+        await slotModel.findByIdAndUpdate(slotId, { isBooked: true });
+        return newBooking;
+    } catch (error) {
+        console.log(error)
+        return {error:error.message}
+    }
+}
+
+async function deleteBooking(studentId, coachId, slotId) {
+    try {
+     
+      
+        const booking = await bookingModel.findOne({ studentId, coachId, slotId });
+    
+        if (!booking) {
+            throw new Error("Booking does not exist.");
+        }
+        await bookingModel.deleteOne({ studentId, coachId, slotId });
+
+   
+        await slotModel.findByIdAndUpdate(slotId, { isBooked: false });
+
+        return await slotModel.findById(slotId); 
+    } catch (error) {
+        return {error:error.message};
+    }
+}
+
+async function getBookings(id){
+    try {
+        const user = await userModel.findById(id)
+        let bookings = []
+        if(!user){
+            throw new Error("Invalid ID")
+        }
+        if(user.role === "coach"){
+             bookings = await bookingModel.find({coachId:id})
+        }
+        if(user.role === "student"){
+             bookings = await bookingModel.find({studentId:id})
+        }
+        return bookings
+        
+
+    } catch (error) {
+        return {error:error.message}
+    }
+   
+}
+
+
+async function getConflictingSlots(slotId) {
+    const slot = await slotModel.findById(slotId);
+    if (!slot) return [];
+
+    const slotStartTime = new Date(slot.dateTime);
+    const slotEndTime = new Date(slotStartTime.getTime() + 2 * 60 * 60 * 1000); 
+
+    return slotModel.find({
+        dateTime: { $lt: slotEndTime, $gte: slotStartTime },
+        isBooked: true
+    }).distinct("_id"); 
+}
+
+module.exports = {createBooking,deleteBooking,getBookings}
